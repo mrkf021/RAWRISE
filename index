@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مدیریت برنامه تمرینی</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+```
+    body {
+        font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 15px;
+        color: #2c3e50;
+    }
+    
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+        overflow: hidden;
+    }
+    
+    .header {
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        padding: 30px 20px;
+        text-align: center;
+        color: white;
+        position: relative;
+    }
+    
+    .header::before {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 6px;
+        background: rgba(255,255,255,0.3);
+        border-radius: 3px;
+    }
+    
+    .header h1 {
+        font-size: 2.2rem;
+        margin-bottom: 10px;
+        font-weight: 700;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    }
+    
+    .tabs {
+        display: flex;
+        background: #f8fafc;
+        border-bottom: 1px solid #e2e8f0;
+    }
+    
+    .tab {
+        flex: 1;
+        padding: 18px 15px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        font-weight: 600;
+        font-size: 1rem;
+        border: none;
+        background: transparent;
+        position: relative;
+        color: #64748b;
+    }
+    
+    .tab.active {
+        color: #4f46e5;
+        background: white;
+        box-shadow: 0 -2px 10px rgba(79, 70, 229, 0.1);
+    }
+    
+    .tab.active::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(135deg, #4f46e5, #7c3aed);
+        border-radius: 2px 2px 0 0;
+    }
+    
+    .tab:hover:not(.active) {
+        color: #475569;
+        background: #f1f5f9;
+    }
+    
+    .content {
+        padding: 30px;
+    }
+    
+    .tab-content {
+        display: none;
+    }
+    
+    .tab-content.active {
+        display: block;
+        animation: slideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .form-section {
+        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        padding: 25px;
+        border-radius: 15px;
+        margin-bottom: 25px;
+        border: 1px solid #e2e8f0;
+    }
+    
+    .form-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+    }
+    
+    .form-group {
+        margin-bottom: 20px;
+    }
+    
+    label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #374151;
+        font-size: 0.95rem;
+    }
+    
+    input, textarea {
+        width: 100%;
+        padding: 12px 16px;
+        border: 2px solid #e5e7eb;
+        border-radius: 10px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background: white;
+        font-family: inherit;
+    }
+    
+    input:focus, textarea:focus {
+        border-color: #4f46e5;
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        outline: none;
+        transform: translateY(-1px);
+    }
+    
+    .btn {
+        background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+        color: white;
+        padding: 12px 24px;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 1rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        margin: 8px 5px;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        transition: left 0.6s;
+    }
+    
+    .btn:hover::before {
+        left: 100%;
+    }
+    
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(79, 70, 229, 0.3);
+    }
+    
+    .btn-success {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    }
+    
+    .btn-success:hover {
+        box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+    }
+    
+    .btn-danger {
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        padding: 8px 16px;
+        font-size: 0.9rem;
+    }
+    
+    .btn-danger:hover {
+        box-shadow: 0 8px 25px rgba(239, 68, 68, 0.3);
+    }
+    
+    .workout-day {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 25px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        border: 1px solid #e5e7eb;
+    }
+    
+    .day-title {
+        background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+        color: white;
+        padding: 15px 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        font-weight: 600;
+        font-size: 1.1rem;
+        text-align: center;
+        box-shadow: 0 4px 15px rgba(79, 70, 229, 0.2);
+    }
+    
+    .exercise-item {
+        background: #f8fafc;
+        padding: 15px 20px;
+        border-radius: 10px;
+        margin-bottom: 15px;
+        border-right: 4px solid #4f46e5;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+    
+    .exercise-inputs {
+        display: flex;
+        gap: 15px;
+        flex: 1;
+        flex-wrap: wrap;
+    }
+    
+    .exercise-inputs input {
+        flex: 1;
+        min-width: 120px;
+        margin: 0;
+    }
+    
+    .nutrition-grid {
+        display: grid;
+        gap: 20px;
+        margin-bottom: 25px;
+    }
+    
+    .meal-card {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+        border: 1px solid #e5e7eb;
+        transition: all 0.3s ease;
+    }
+    
+    .meal-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+    }
+    
+    .meal-title {
+        color: #4f46e5;
+        font-weight: 600;
+        margin-bottom: 10px;
+        font-size: 1.05rem;
+        padding-bottom: 8px;
+        border-bottom: 2px solid #e5e7eb;
+    }
+    
+    .output-section {
+        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        border-radius: 15px;
+        padding: 25px;
+        margin-top: 20px;
+        border: 1px solid #e2e8f0;
+    }
+    
+    .copy-area {
+        background: white;
+        border: 2px dashed #cbd5e1;
+        border-radius: 10px;
+        padding: 20px;
+        font-family: 'Courier New', monospace;
+        white-space: pre-line;
+        font-size: 0.9rem;
+        line-height: 1.6;
+        max-height: 400px;
+        overflow-y: auto;
+        margin-bottom: 15px;
+    }
+    
+    .alert {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        color: white;
+        padding: 12px 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        text-align: center;
+        display: none;
+        font-weight: 600;
+    }
+    
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+        body {
+            padding: 10px;
+        }
+        
+        .header h1 {
+            font-size: 1.8rem;
+        }
+        
+        .content {
+            padding: 20px;
+        }
+        
+        .exercise-inputs {
+            flex-direction: column;
+        }
+        
+        .exercise-inputs input {
+            min-width: auto;
+        }
+        
+        .form-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .btn {
+            width: 100%;
+            margin: 5px 0;
+        }
+        
+        .exercise-item {
+            flex-direction: column;
+            align-items: stretch;
+        }
+    }
+</style>
+```
+
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💪 برنامه تمرینی شخصی</h1>
+            <p>مدیریت ساده و حرفه‌ای</p>
+        </div>
+
+```
+    <div class="tabs">
+        <button class="tab active" data-tab="info">اطلاعات کلی</button>
+        <button class="tab" data-tab="workout">برنامه تمرین</button>
+        <button class="tab" data-tab="nutrition">برنامه تغذیه</button>
+        <button class="tab" data-tab="output">خروجی نهایی</button>
+    </div>
+    
+    <div class="content">
+        <div id="alert" class="alert"></div>
+        
+        <!-- اطلاعات کلی -->
+        <div id="info" class="tab-content active">
+            <div class="form-section">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>👨‍🏫 نام مربی:</label>
+                        <input type="text" id="trainer" value="سید محمد ابراهیمی">
+                    </div>
+                    <div class="form-group">
+                        <label>📋 عنوان برنامه:</label>
+                        <input type="text" id="program-title" value="ماه مرداد">
+                    </div>
+                    <div class="form-group">
+                        <label>📅 تاریخ شروع:</label>
+                        <input type="text" id="start-date" value="1403/05/15">
+                    </div>
+                </div>
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>👤 نام ورزشکار:</label>
+                        <input type="text" id="athlete" value="محمدرضا کلهوری">
+                    </div>
+                    <div class="form-group">
+                        <label>🎂 سن:</label>
+                        <input type="number" id="age" value="22">
+                    </div>
+                    <div class="form-group">
+                        <label>📏 قد (سانتی‌متر):</label>
+                        <input type="number" id="height" value="180">
+                    </div>
+                    <div class="form-group">
+                        <label>⚖️ وزن (کیلوگرم):</label>
+                        <input type="number" id="weight" value="80">
+                    </div>
+                    <div class="form-group">
+                        <label>🎯 هدف اصلی:</label>
+                        <input type="text" id="goal" value="عضله سازی">
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- برنامه تمرین -->
+        <div id="workout" class="tab-content">
+            <div class="form-section">
+                <div class="form-group">
+                    <label>🏷️ نام روز تمرینی:</label>
+                    <input type="text" id="day-name" placeholder="مثال: سرشانه و پشت بازو">
+                </div>
+                <button class="btn btn-success" onclick="createWorkoutDay()">✅ ایجاد روز تمرینی</button>
+            </div>
+            
+            <div id="workout-days-container"></div>
+        </div>
+        
+        <!-- برنامه تغذیه -->
+        <div id="nutrition" class="tab-content">
+            <div class="nutrition-grid" id="nutrition-grid">
+                <div class="meal-card">
+                    <div class="meal-title">🌅 ناشتا</div>
+                    <textarea id="meal-0" rows="3" placeholder="محتویات ناشتا را وارد کنید..."></textarea>
+                </div>
+                <div class="meal-card">
+                    <div class="meal-title">🥞 صبحانه</div>
+                    <textarea id="meal-1" rows="3" placeholder="محتویات صبحانه را وارد کنید..."></textarea>
+                </div>
+                <div class="meal-card">
+                    <div class="meal-title">☕ میان وعده صبح</div>
+                    <textarea id="meal-2" rows="3" placeholder="محتویات میان وعده صبح را وارد کنید..."></textarea>
+                </div>
+                <div class="meal-card">
+                    <div class="meal-title">🍽️ ناهار</div>
+                    <textarea id="meal-3" rows="3" placeholder="محتویات ناهار را وارد کنید..."></textarea>
+                </div>
+                <div class="meal-card">
+                    <div class="meal-title">💪 بعد تمرین</div>
+                    <textarea id="meal-4" rows="3" placeholder="محتویات بعد تمرین را وارد کنید..."></textarea>
+                </div>
+                <div class="meal-card">
+                    <div class="meal-title">🥤 میان وعده عصر</div>
+                    <textarea id="meal-5" rows="3" placeholder="محتویات میان وعده عصر را وارد کنید..."></textarea>
+                </div>
+                <div class="meal-card">
+                    <div class="meal-title">🍲 شام</div>
+                    <textarea id="meal-6" rows="3" placeholder="محتویات شام را وارد کنید..."></textarea>
+                </div>
+                <div class="meal-card">
+                    <div class="meal-title">🌙 قبل خواب</div>
+                    <textarea id="meal-7" rows="3" placeholder="محتویات قبل خواب را وارد کنید..."></textarea>
+                </div>
+            </div>
+        </div>
+        
+        <!-- خروجی نهایی -->
+        <div id="output" class="tab-content">
+            <div class="output-section">
+                <h3 style="color: #4f46e5; margin-bottom: 15px;">📄 متن آماده برای کپی:</h3>
+                <div id="copy-area" class="copy-area"></div>
+                <button class="btn btn-success" onclick="copyToClipboard()">📋 کپی کردن</button>
+                <button class="btn" onclick="generateOutput()">🔄 بروزرسانی</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let workoutDays = [];
+    const mealNames = ['ناشتا', 'صبحانه', 'میان وعده صبح', 'ناهار', 'بعد تمرین', 'میان وعده عصر', 'شام', 'قبل خواب'];
+    
+    // Tab Management
+    document.querySelectorAll('.tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            
+            tab.classList.add('active');
+            document.getElementById(tab.dataset.tab).classList.add('active');
+            
+            if (tab.dataset.tab === 'output') {
+                generateOutput();
+            }
+        });
+    });
+    
+    function showAlert(message) {
+        const alert = document.getElementById('alert');
+        alert.textContent = message;
+        alert.style.display = 'block';
+        setTimeout(() => alert.style.display = 'none', 3000);
+    }
+    
+    function createWorkoutDay() {
+        const dayName = document.getElementById('day-name').value.trim();
+        if (!dayName) {
+            showAlert('❌ لطفاً نام روز تمرینی را وارد کنید');
+            return;
+        }
+        
+        const dayId = Date.now();
+        const day = {
+            id: dayId,
+            name: dayName,
+            exercises: []
+        };
+        
+        workoutDays.push(day);
+        renderWorkoutDay(day);
+        
+        document.getElementById('day-name').value = '';
+        showAlert('✅ روز تمرینی ایجاد شد');
+    }
+    
+    function renderWorkoutDay(day) {
+        const container = document.getElementById('workout-days-container');
+        const dayDiv = document.createElement('div');
+        dayDiv.className = 'workout-day';
+        dayDiv.id = `day-${day.id}`;
+        
+        dayDiv.innerHTML = `
+            <div class="day-title">
+                ${day.name}
+                <button class="btn btn-danger" style="float: left; padding: 8px 15px;" onclick="removeDay(${day.id})">🗑️ حذف روز</button>
+            </div>
+            <div id="exercises-${day.id}"></div>
+            <button class="btn btn-success" onclick="addExercise(${day.id})">➕ افزودن تمرین</button>
+        `;
+        
+        container.appendChild(dayDiv);
+    }
+    
+    function addExercise(dayId) {
+        const day = workoutDays.find(d => d.id === dayId);
+        if (!day) return;
+        
+        const exerciseId = Date.now();
+        const exercise = {
+            id: exerciseId,
+            name: '',
+            sets: '',
+            videoLink: '',
+            note: ''
+        };
+        
+        day.exercises.push(exercise);
+        renderExercise(dayId, exercise);
+    }
+    
+    function renderExercise(dayId, exercise) {
+        const container = document.getElementById(`exercises-${dayId}`);
+        const exerciseDiv = document.createElement('div');
+        exerciseDiv.className = 'exercise-item';
+        exerciseDiv.id = `exercise-${exercise.id}`;
+        
+        exerciseDiv.innerHTML = `
+            <div class="exercise-inputs">
+                <input type="text" placeholder="نام تمرین" value="${exercise.name}" onchange="updateExercise(${dayId}, ${exercise.id}, 'name', this.value)">
+                <input type="text" placeholder="تعداد ست" value="${exercise.sets}" onchange="updateExercise(${dayId}, ${exercise.id}, 'sets', this.value)">
+                <input type="url" placeholder="لینک ویدیو" value="${exercise.videoLink}" onchange="updateExercise(${dayId}, ${exercise.id}, 'videoLink', this.value)">
+                <input type="text" placeholder="یادداشت" value="${exercise.note}" onchange="updateExercise(${dayId}, ${exercise.id}, 'note', this.value)">
+            </div>
+            <button class="btn btn-danger" onclick="removeExercise(${dayId}, ${exercise.id})">🗑️</button>
+        `;
+        
+        container.appendChild(exerciseDiv);
+    }
+    
+    function updateExercise(dayId, exerciseId, field, value) {
+        const day = workoutDays.find(d => d.id === dayId);
+        if (day) {
+            const exercise = day.exercises.find(e => e.id === exerciseId);
+            if (exercise) {
+                exercise[field] = value;
+            }
+        }
+    }
+    
+    function removeExercise(dayId, exerciseId) {
+        const day = workoutDays.find(d => d.id === dayId);
+        if (day) {
+            day.exercises = day.exercises.filter(e => e.id !== exerciseId);
+            document.getElementById(`exercise-${exerciseId}`).remove();
+            showAlert('✅ تمرین حذف شد');
+        }
+    }
+    
+    function removeDay(dayId) {
+        if (confirm('آیا مطمئن هستید که می‌خواهید این روز تمرینی را حذف کنید؟')) {
+            workoutDays = workoutDays.filter(d => d.id !== dayId);
+            document.getElementById(`day-${dayId}`).remove();
+            showAlert('✅ روز تمرینی حذف شد');
+        }
+    }
+    
+    function generateOutput() {
+        const trainer = document.getElementById('trainer').value;
+        const programTitle = document.getElementById('program-title').value;
+        const startDate = document.getElementById('start-date').value;
+        const athlete = document.getElementById('athlete').value;
+        const age = document.getElementById('age').value;
+        const height = document.getElementById('height').value;
+        const weight = document.getElementById('weight').value;
+        const goal = document.getElementById('goal').value;
+        
+        let output = `مربی: ${trainer}\n`;
+        output += `عنوان برنامه: ${programTitle}\n`;
+        output += `تاریخ شروع برنامه: ${startDate}\n\n`;
+        output += `ورزشجو: ${athlete}\n`;
+        output += `سن: ${age}\n`;
+        output += `قد: ${height}\n`;
+        output += `وزن: ${weight}\n`;
+        output += `هدف اصلی: ${goal}\n\n`;
+        
+        // اضافه کردن تمرینات
+        workoutDays.forEach(day => {
+            output += `${day.name}:\n`;
+            output += `${'='.repeat(day.name.length + 1)}\n\n`;
+            
+            output += `تمرین\t\t\tتعداد ست\t\tآموزش\t\tیادداشت\n`;
+            output += `${'-'.repeat(60)}\n`;
+            
+            day.exercises.forEach(exercise => {
+                const videoText = exercise.videoLink ? 'ویدیو' : '-';
+                output += `${exercise.name || '-'}\t\t${exercise.sets || '-'}\t\t${videoText}\t\t${exercise.note || '-'}\n`;
+            });
+            
+            output += `\n`;
+        });
+        
+        // اضافه کردن تغذیه
+        let hasNutrition = false;
+        mealNames.forEach((mealName, index) => {
+            const mealContent = document.getElementById(`meal-${index}`).value.trim();
+            if (mealContent) {
+                hasNutrition = true;
+            }
+        });
+        
+        if (hasNutrition) {
+            output += `برنامه تغذیه:\n`;
+            output += `===============\n\n`;
+            
+            mealNames.forEach((mealName, index) => {
+                const mealContent = document.getElementById(`meal-${index}`).value.trim();
+                if (mealContent) {
+                    output += `${mealName}:\n${mealContent}\n\n`;
+                }
+            });
+        }
+        
+        document.getElementById('copy-area').textContent = output;
+    }
+    
+    function copyToClipboard() {
+        const copyArea = document.getElementById('copy-area');
+        const text = copyArea.textContent;
+        
+        navigator.clipboard.writeText(text).then(() => {
+            showAlert('✅ محتوا با موفقیت کپی شد!');
+        }).catch(() => {
+            // Fallback for older browsers
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            showAlert('✅ محتوا کپی شد!');
+        });
+    }
+    
+    // Load initial nutrition data
+    function loadInitialNutrition() {
+        const initialMeals = [
+            'یک لیوان آب + یک قاشق غذا خوری سرکه سیب + یک قاشق چای خوری پودر زنجبیل + یک قاشق چای خوری دارچین + یک قاشق چای خوری عسل + یک عدد لیمو ترش',
+            'پنج عدد سفیده تخم مرغ یک عدد زرده /اتمیل (جودوسر پرک + دانه چیا + دو عدد توت فرنگی + نصف قاشق عسل) + سه عدد توت خشک',
+            '۲۰۰گرم فیله مرغ یا سینه مرغ + سه عدد نان جو + مغزیجات + یک عدد سیب سبز',
+            'هفت قاشق برنج + ماهی سالمون / بوقلمون + ماست یونانی + سالاد شیرازی + یک عدد لیموترش',
+            'شش عدد سفیده تخم مرغ + ۱۵۰گرم سیب زمینی + چهار برگ کاهو + زیتون',
+            'عدسی + دو برش نان جو + سالاد + یک عدد لیمو ترش',
+            '200گرم فیله مرغ /بوقلمون + دو برش نان جو + سبزیجات + یک قاشق سرکه بالزامیک + کدو خورشتی پخته شده',
+            ''
+        ];
+        
+        initialMeals.forEach((meal, index) => {
+            document.getElementById(`meal-${index}`).value = meal;
+        });
+    }
+    
+    // Initialize app
+    window.addEventListener('load', () => {
+        loadInitialNutrition();
+        generateOutput();
+    });
+</script>
+```
+
+</body>
+</html>
